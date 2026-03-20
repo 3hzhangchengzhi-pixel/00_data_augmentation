@@ -1,0 +1,1567 @@
+[
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取车辆标题字段",
+    "steps": [
+      "步骤 1：准备包含车辆标题的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证返回的 title 字段不为空且与预期一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取年式字段",
+    "steps": [
+      "步骤 1：准备包含年式标签的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 year 为 4 位整数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取走行距离字段并转换单位",
+    "steps": [
+      "步骤 1：准备包含「5.2万km」的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 mileage_km 等于 52000.0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取车检日期字段",
+    "steps": [
+      "步骤 1：准备包含「2026年11月」的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 inspection 等于 '202611'"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取修复历史字段",
+    "steps": [
+      "步骤 1：准备包含修復歴的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 accident_history 字段值正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取支払総額",
+    "steps": [
+      "步骤 1：准备包含总价的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 total_price 为正浮点数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取車両本体価格",
+    "steps": [
+      "步骤 1：准备包含本体价格的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 base_price 为正浮点数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取地域信息",
+    "steps": [
+      "步骤 1：准备包含地域标签的 mock HTML",
+      "步骤 2：调用 parse_cassette 函数",
+      "步骤 3：验证 region 字段包含都道府县名"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取排气量字段",
+    "steps": [
+      "步骤 1：准备包含排気量的 mock HTML",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 displacement 不为空"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 爬虫能正确提取变速箱类型",
+    "steps": [
+      "步骤 1：准备包含ミッション的 mock HTML",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 transmission 不为空"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor clean_text 能去除 NBSP 和空白",
+    "steps": [
+      "步骤 1：传入含 \\xa0 的字符串",
+      "步骤 2：调用 clean_text",
+      "步骤 3：验证返回字符串无 NBSP 且首尾无空白"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor clean_price 能从文本中提取数值",
+    "steps": [
+      "步骤 1：传入 '189 万円'",
+      "步骤 2：调用 clean_price",
+      "步骤 3：验证返回 189.0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor clean_price 对非字符串输入返回 None",
+    "steps": [
+      "步骤 1：传入整数 123",
+      "步骤 2：调用 clean_price",
+      "步骤 3：验证返回 None"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor extract_car_info 对 HTTP 错误返回 None",
+    "steps": [
+      "步骤 1：mock requests.get 返回 404",
+      "步骤 2：调用 extract_car_info",
+      "步骤 3：验证返回 None"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor 分页抓取能正确拼接 URL",
+    "steps": [
+      "步骤 1：设定 base_url 和 page_count=3",
+      "步骤 2：mock extract_car_info",
+      "步骤 3：验证第 2 页 URL 格式正确",
+      "步骤 4：验证第 1 页使用原始 URL"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取车辆标题",
+    "steps": [
+      "步骤 1：准备包含 header .card-title 的 mock HTML",
+      "步骤 2：调用 parse_exhibited_article",
+      "步骤 3：验证 title 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取支払総額",
+    "steps": [
+      "步骤 1：准备包含价格 UL 的 mock HTML",
+      "步骤 2：调用 pick_from_price_block",
+      "步骤 3：验证 total_price 为正浮点数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取本体价格",
+    "steps": [
+      "步骤 1：准备包含本体价格的 mock HTML",
+      "步骤 2：调用 pick_from_price_block",
+      "步骤 3：验证 base_price 正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取诸费用",
+    "steps": [
+      "步骤 1：准备包含諸費用的 mock HTML",
+      "步骤 2：调用 pick_from_price_block",
+      "步骤 3：验证 other_fee 正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取年式",
+    "steps": [
+      "步骤 1：准备包含年式 spec 的 mock HTML",
+      "步骤 2：调用 pick_from_spec_block",
+      "步骤 3：验证 year 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取走行距离并转换单位",
+    "steps": [
+      "步骤 1：准备包含「3.5万km」的 mock HTML",
+      "步骤 2：调用 pick_from_spec_block",
+      "步骤 3：验证 mileage_km 等于 35000.0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确解析车检日期",
+    "steps": [
+      "步骤 1：准备包含「26年8月」的 mock HTML",
+      "步骤 2：调用 pick_from_spec_block",
+      "步骤 3：验证 inspection 等于 '202608'"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 爬虫能正确提取出品地域",
+    "steps": [
+      "步骤 1：准备包含出品地域的 mock HTML",
+      "步骤 2：调用 pick_from_spec_block",
+      "步骤 3：验证 region 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico extract_money_li 能正确组合价格文字",
+    "steps": [
+      "步骤 1：准备包含 <strong> 和 <small> 的 mock <li>",
+      "步骤 2：调用 extract_money_li",
+      "步骤 3：验证返回 '68.0 万円' 格式"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico parse_exhibited_article 对非 article 标签抛出 ValueError",
+    "steps": [
+      "步骤 1：传入 <div> 标签",
+      "步骤 2：调用 parse_exhibited_article",
+      "步骤 3：验证抛出 ValueError"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico 分页抓取能正确拼接 ?page=N 参数",
+    "steps": [
+      "步骤 1：mock extract_car_info",
+      "步骤 2：调用 scrape_mobilico page_count=3",
+      "步骤 3：验证调用 URL 包含 ?page=1, ?page=2"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能正确识别数据表格",
+    "steps": [
+      "步骤 1：准备包含多个 <table> 的 mock HTML",
+      "步骤 2：调用 find_data_table",
+      "步骤 3：验证返回包含预期表头的 table"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能正确提取制造商字段",
+    "steps": [
+      "步骤 1：准备包含 maker 数据的 mock 行对",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 maker 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能正确提取车种名称",
+    "steps": [
+      "步骤 1：准备 mock 行对",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 title 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能正确提取等级信息",
+    "steps": [
+      "步骤 1：准备包含 grade 的 mock 行对",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 grade 字段来自 row2"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能正确解析价格范围",
+    "steps": [
+      "步骤 1：传入 '12 ～ 15'",
+      "步骤 2：调用 parse_price_range",
+      "步骤 3：验证返回 (12.0, 15.0)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport parse_price_range 处理单一价格",
+    "steps": [
+      "步骤 1：传入 '10'",
+      "步骤 2：调用 parse_price_range",
+      "步骤 3：验证返回 (10.0, 10.0)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport parse_price_range 处理空字符串",
+    "steps": [
+      "步骤 1：传入 ''",
+      "步骤 2：调用 parse_price_range",
+      "步骤 3：验证返回 (None, None)"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport clean_text 处理全角空格和连续空白",
+    "steps": [
+      "步骤 1：传入含 \\u3000 和多个空格的字符串",
+      "步骤 2：调用 clean_text",
+      "步骤 3：验证返回单空格分隔的字符串"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport get_soup 能正确检测 Shift_JIS 编码",
+    "steps": [
+      "步骤 1：mock requests.get 返回 Content-Type 含 shift_jis",
+      "步骤 2：调用 get_soup",
+      "步骤 3：验证 encoding 被设为 cp932"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport extract_rows_from_table 能跳过空行",
+    "steps": [
+      "步骤 1：准备包含空 <tr> 的 mock table",
+      "步骤 2：调用 extract_rows_from_table",
+      "步骤 3：验证返回结果不包含空行"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport align_columns 能正确映射列位置",
+    "steps": [
+      "步骤 1：准备包含部分预期表头的行列表",
+      "步骤 2：调用 align_columns",
+      "步骤 3：验证 col_positions 中已知列有正确索引",
+      "步骤 4：验证缺失列映射为 None"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport extract_car_info 对表格未找到时返回空列表",
+    "steps": [
+      "步骤 1：mock get_data_rows 抛出 RuntimeError",
+      "步骤 2：调用 extract_car_info",
+      "步骤 3：验证返回空列表而非异常"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 走行距离正确乘以 10000",
+    "steps": [
+      "步骤 1：准备 row1[4] = '5.2' 的 mock 数据",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 mileage_km 等于 52000.0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 爬虫能提取颜色字段",
+    "steps": [
+      "步骤 1：准备包含颜色数据的 mock 行对",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 color 字段来自 row2[4]"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能将「万円」价格转为整数日元",
+    "steps": [
+      "步骤 1：输入 189.0（万円）",
+      "步骤 2：调用价格标准化函数",
+      "步骤 3：验证输出为 1890000（整数日元）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能将里程统一为公里整数",
+    "steps": [
+      "步骤 1：输入 '5.2万km'",
+      "步骤 2：调用里程标准化函数",
+      "步骤 3：验证输出为 52000（整数）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能将和历年份转为西历",
+    "steps": [
+      "步骤 1：输入 '令和2年'",
+      "步骤 2：调用年份标准化函数",
+      "步骤 3：验证输出为 2020"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能解析车检日期为标准格式",
+    "steps": [
+      "步骤 1：输入 '202611'",
+      "步骤 2：调用车检日期标准化函数",
+      "步骤 3：验证输出为 '2026-11' 或等效日期对象"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能将修复历史转为布尔值",
+    "steps": [
+      "步骤 1：输入 'あり' 和 'なし'",
+      "步骤 2：调用修复历史标准化函数",
+      "步骤 3：验证分别返回 True 和 False"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能统一变速箱分类",
+    "steps": [
+      "步骤 1：输入 'オートマチック', 'マニュアル', 'CVT'",
+      "步骤 2：调用变速箱标准化函数",
+      "步骤 3：验证分别返回 'AT', 'MT', 'CVT'"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 dedup 能基于标题+价格+里程去重",
+    "steps": [
+      "步骤 1：创建含重复记录的 DataFrame",
+      "步骤 2：调用去重函数",
+      "步骤 3：验证重复记录被移除",
+      "步骤 4：验证保留信息最完整的记录"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 dedup 能跨数据源去重",
+    "steps": [
+      "步骤 1：创建来自不同网站的含相同车辆的数据",
+      "步骤 2：调用跨源去重函数",
+      "步骤 3：验证同一辆车只保留一条",
+      "步骤 4：验证保留的是信息最完整的记录"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 cleaner 能加载并合并多源 pickle 数据",
+    "steps": [
+      "步骤 1：创建 3 个 mock pickle 文件",
+      "步骤 2：调用清洗入口函数",
+      "步骤 3：验证返回统一格式的 DataFrame",
+      "步骤 4：验证总行数等于各源去重后之和"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块 normalize 能标准化地域名称",
+    "steps": [
+      "步骤 1：输入 '東京都 渋谷区' 和 '東京 渋谷'",
+      "步骤 2：调用地域标准化函数",
+      "步骤 3：验证输出统一格式"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 numerical 能正确计算车龄",
+    "steps": [
+      "步骤 1：创建含 year=2020 的 DataFrame",
+      "步骤 2：调用车龄计算函数",
+      "步骤 3：验证 car_age = 当前年份 - 2020"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 numerical 能正确进行里程分桶",
+    "steps": [
+      "步骤 1：创建含不同里程值的 DataFrame",
+      "步骤 2：调用里程分桶函数",
+      "步骤 3：验证 0-3万 → '0-30k', 3-6万 → '30k-60k' 等"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 numerical 能正确进行排气量分桶",
+    "steps": [
+      "步骤 1：创建含不同排气量值的 DataFrame",
+      "步骤 2：调用排气量分桶函数",
+      "步骤 3：验证分桶结果正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 numerical 能正确进行价格对数变换",
+    "steps": [
+      "步骤 1：创建含价格列的 DataFrame",
+      "步骤 2：调用对数变换函数",
+      "步骤 3：验证输出为 log(price) 且无 NaN"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 categorical 能正确进行地域独热编码",
+    "steps": [
+      "步骤 1：创建含 region 列的 DataFrame",
+      "步骤 2：调用独热编码函数",
+      "步骤 3：验证生成 region_东京都, region_大阪府 等列",
+      "步骤 4：验证值为 0 或 1"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 categorical 能正确进行变速箱独热编码",
+    "steps": [
+      "步骤 1：创建含 transmission 列（AT/MT/CVT）的 DataFrame",
+      "步骤 2：调用独热编码函数",
+      "步骤 3：验证生成正确的独热列"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 categorical 能正确进行颜色标签编码",
+    "steps": [
+      "步骤 1：创建含 color 列的 DataFrame",
+      "步骤 2：调用标签编码函数",
+      "步骤 3：验证输出为整数编码"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 categorical 能正确进行厂商标签编码",
+    "steps": [
+      "步骤 1：创建含 maker 列的 DataFrame",
+      "步骤 2：调用标签编码函数",
+      "步骤 3：验证输出为整数编码且映射一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 derived 能正确计算单位里程价格",
+    "steps": [
+      "步骤 1：创建含 price 和 mileage 的 DataFrame",
+      "步骤 2：调用衍生特征函数",
+      "步骤 3：验证 price_per_km = price / mileage"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 derived 能正确计算年均里程",
+    "steps": [
+      "步骤 1：创建含 mileage 和 car_age 的 DataFrame",
+      "步骤 2：调用衍生特征函数",
+      "步骤 3：验证 annual_mileage = mileage / car_age"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 derived 能正确估算折旧率",
+    "steps": [
+      "步骤 1：创建含 price 和 car_age 的 DataFrame",
+      "步骤 2：调用折旧率计算函数",
+      "步骤 3：验证折旧率在合理范围内"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 derived 能正确计算车检剩余月数",
+    "steps": [
+      "步骤 1：创建含 inspection_date 的 DataFrame",
+      "步骤 2：调用车检剩余计算函数",
+      "步骤 3：验证剩余月数为非负整数",
+      "步骤 4：验证已过期的车检返回 0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 derived 能正确判断是否有车检剩余",
+    "steps": [
+      "步骤 1：创建含不同 inspection_date 的 DataFrame",
+      "步骤 2：调用是否有车检判断函数",
+      "步骤 3：验证有效车检返回 True, 过期返回 False"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 builder 能正确处理缺失值",
+    "steps": [
+      "步骤 1：创建含 NaN 的 DataFrame",
+      "步骤 2：调用特征构建入口函数",
+      "步骤 3：验证输出无 NaN",
+      "步骤 4：验证填充策略合理（中位数/众数等）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 builder 能去除高相关性冗余特征",
+    "steps": [
+      "步骤 1：创建含高相关特征对的 DataFrame",
+      "步骤 2：调用特征选择函数",
+      "步骤 3：验证冗余特征被移除",
+      "步骤 4：验证保留的特征间相关性 < 阈值"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 builder 输出训练就绪的 X 和 y",
+    "steps": [
+      "步骤 1：准备清洗后的 DataFrame",
+      "步骤 2：调用特征构建入口",
+      "步骤 3：验证 X 为数值矩阵（无字符串列）",
+      "步骤 4：验证 y 为一维数组",
+      "步骤 5：验证 X 和 y 行数一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能训练线性回归基线模型",
+    "steps": [
+      "步骤 1：准备训练数据 X_train, y_train",
+      "步骤 2：调用训练函数指定 LinearRegression",
+      "步骤 3：验证返回已拟合的模型对象"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能训练随机森林模型",
+    "steps": [
+      "步骤 1：准备训练数据",
+      "步骤 2：调用训练函数指定 RandomForestRegressor",
+      "步骤 3：验证返回已拟合的模型对象"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能训练 XGBoost 模型",
+    "steps": [
+      "步骤 1：准备训练数据",
+      "步骤 2：调用训练函数指定 XGBRegressor",
+      "步骤 3：验证返回已拟合的模型对象"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能训练 LightGBM 模型",
+    "steps": [
+      "步骤 1：准备训练数据",
+      "步骤 2：调用训练函数指定 LGBMRegressor",
+      "步骤 3：验证返回已拟合的模型对象"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能正确划分训练/验证/测试集 (70/15/15)",
+    "steps": [
+      "步骤 1：准备 1000 条数据",
+      "步骤 2：调用数据划分函数",
+      "步骤 3：验证训练集约 700 条",
+      "步骤 4：验证验证集约 150 条",
+      "步骤 5：验证测试集约 150 条",
+      "步骤 6：验证三个集合无交集"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 能执行 5 折交叉验证",
+    "steps": [
+      "步骤 1：准备训练数据和模型",
+      "步骤 2：调用交叉验证函数",
+      "步骤 3：验证返回 5 个分数",
+      "步骤 4：验证所有分数在合理范围内"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 能计算 RMSE",
+    "steps": [
+      "步骤 1：准备 y_true 和 y_pred",
+      "步骤 2：调用 RMSE 计算函数",
+      "步骤 3：验证结果为非负数且计算正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 能计算 MAE",
+    "steps": [
+      "步骤 1：准备 y_true 和 y_pred",
+      "步骤 2：调用 MAE 计算函数",
+      "步骤 3：验证结果正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 能计算 R²",
+    "steps": [
+      "步骤 1：准备 y_true 和 y_pred",
+      "步骤 2：调用 R² 计算函数",
+      "步骤 3：验证完美预测时 R² = 1.0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 能计算 MAPE",
+    "steps": [
+      "步骤 1：准备 y_true 和 y_pred",
+      "步骤 2：调用 MAPE 计算函数",
+      "步骤 3：验证结果为百分比格式"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 能生成多模型对比表格",
+    "steps": [
+      "步骤 1：训练 4 个模型并获取预测结果",
+      "步骤 2：调用对比函数",
+      "步骤 3：验证返回包含 RMSE/MAE/R²/MAPE 的表格",
+      "步骤 4：验证表格行数等于模型数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 predictor 能加载已保存的模型文件",
+    "steps": [
+      "步骤 1：训练并保存模型到文件",
+      "步骤 2：调用模型加载函数",
+      "步骤 3：验证加载的模型能正常预测"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 predictor 输入车辆参数后能输出预测价格",
+    "steps": [
+      "步骤 1：加载训练好的模型",
+      "步骤 2：输入一组车辆参数",
+      "步骤 3：验证输出为正数价格"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 predictor 能输出预测置信区间",
+    "steps": [
+      "步骤 1：加载训练好的模型",
+      "步骤 2：输入车辆参数请求置信区间",
+      "步骤 3：验证返回 (lower, upper) 且 lower < upper"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 tuner 能执行 Grid Search 调优",
+    "steps": [
+      "步骤 1：定义参数搜索空间",
+      "步骤 2：调用 Grid Search 函数",
+      "步骤 3：验证返回最优参数组合",
+      "步骤 4：验证最优分数优于默认参数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 tuner 能执行 Random Search 调优",
+    "steps": [
+      "步骤 1：定义参数分布",
+      "步骤 2：调用 Random Search 函数",
+      "步骤 3：验证返回最优参数组合"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 schema 能正确定义 cars 表结构",
+    "steps": [
+      "步骤 1：获取 cars 表的 SQLAlchemy 模型",
+      "步骤 2：验证包含 title, maker, year, mileage_km 等列",
+      "步骤 3：验证列类型正确（String, Integer, Float 等）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 schema 能正确定义 prices 表结构",
+    "steps": [
+      "步骤 1：获取 prices 表的 SQLAlchemy 模型",
+      "步骤 2：验证包含 car_id, total_price, base_price, recorded_at 等列",
+      "步骤 3：验证外键关联正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 schema 能正确定义 predictions 表结构",
+    "steps": [
+      "步骤 1：获取 predictions 表的 SQLAlchemy 模型",
+      "步骤 2：验证包含 car_id, predicted_price, model_name 等列"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 schema 能正确定义 scrape_logs 表结构",
+    "steps": [
+      "步骤 1：获取 scrape_logs 表的 SQLAlchemy 模型",
+      "步骤 2：验证包含 source, started_at, finished_at, record_count 等列"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 database 能创建 SQLAlchemy 引擎连接",
+    "steps": [
+      "步骤 1：使用 SQLite 内存数据库测试",
+      "步骤 2：调用创建引擎函数",
+      "步骤 3：验证引擎可正常连接"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 export 能将 DataFrame 导出为 CSV",
+    "steps": [
+      "步骤 1：创建测试 DataFrame",
+      "步骤 2：调用 CSV 导出函数",
+      "步骤 3：验证文件已创建",
+      "步骤 4：重新读取验证数据一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 export 能将 DataFrame 导出为 pickle",
+    "steps": [
+      "步骤 1：创建测试 DataFrame",
+      "步骤 2：调用 pickle 导出函数",
+      "步骤 3：重新加载验证数据一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 export 能将 DataFrame 批量插入 SQL",
+    "steps": [
+      "步骤 1：创建 SQLite 内存数据库和表",
+      "步骤 2：创建测试 DataFrame",
+      "步骤 3：调用 SQL 批量插入函数",
+      "步骤 4：查询数据库验证行数一致",
+      "步骤 5：验证数据内容正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "存储模块 export 能将模型序列化保存",
+    "steps": [
+      "步骤 1：训练一个简单模型",
+      "步骤 2：调用模型序列化函数",
+      "步骤 3：重新加载验证模型可预测"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后的价格字段均为正整数（日元）",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：检查 total_price 列的 dtype 为 int",
+      "步骤 3：验证所有值 > 0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后的年份字段在合理范围内",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：验证所有 year 值 >= 1990",
+      "步骤 3：验证所有 year 值 <= 当前年份"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后的里程字段为非负数",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：验证所有 mileage_km >= 0",
+      "步骤 3：验证 mileage_km 无 NaN"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后无关键字段缺失（缺失率 < 5%）",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：计算 title, year, mileage_km, total_price 的缺失率",
+      "步骤 3：验证每个关键字段缺失率 < 5%"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后无重复记录",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：基于 title + total_price + mileage_km 检查重复",
+      "步骤 3：验证无重复行"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后价格范围合理（> 0 且 < 上限）",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：验证 total_price > 0",
+      "步骤 3：验证 total_price < 100000000（1 亿日元）",
+      "步骤 4：验证 base_price <= total_price"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后变速箱类型只包含 AT/MT/CVT",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：获取 transmission 列的唯一值",
+      "步骤 3：验证唯一值是 {'AT', 'MT', 'CVT'} 的子集"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后修复历史字段只包含布尔值",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：验证 accident_history 列的 dtype 为 bool",
+      "步骤 3：验证无 NaN"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "特征矩阵无 NaN 或 Inf 值",
+    "steps": [
+      "步骤 1：构建特征矩阵 X",
+      "步骤 2：检查 X 中无 NaN",
+      "步骤 3：检查 X 中无 Inf",
+      "步骤 4：验证所有列为数值类型"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "特征矩阵的目标变量 y 无异常值",
+    "steps": [
+      "步骤 1：构建目标变量 y",
+      "步骤 2：验证 y 无 NaN",
+      "步骤 3：验证 y 所有值 > 0",
+      "步骤 4：验证 y 的标准差在合理范围"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "合并后数据量 >= 500 条",
+    "steps": [
+      "步骤 1：加载合并后的 DataFrame",
+      "步骤 2：验证行数 >= 500"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "Carsensor 爬虫原始数据中标题字段非空率 >= 95%",
+    "steps": [
+      "步骤 1：加载 Carsensor 原始数据",
+      "步骤 2：计算 title 列非空比例",
+      "步骤 3：验证 >= 95%"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "Mobilico 爬虫原始数据中价格字段非空率 >= 90%",
+    "steps": [
+      "步骤 1：加载 Mobilico 原始数据",
+      "步骤 2：计算 total_price 列非空比例",
+      "步骤 3：验证 >= 90%"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "AucSupport 爬虫原始数据中里程字段非空率 >= 95%",
+    "steps": [
+      "步骤 1：加载 AucSupport 原始数据",
+      "步骤 2：计算 mileage_km 列非空比例",
+      "步骤 3：验证 >= 95%"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "模型在测试集上 R² >= 0.7",
+    "steps": [
+      "步骤 1：使用最佳模型在测试集上预测",
+      "步骤 2：计算 R² 分数",
+      "步骤 3：验证 R² >= 0.7"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "端到端 Pipeline：从原始数据到模型预测",
+    "steps": [
+      "步骤 1：加载原始爬取数据（3 个网站的 pickle 文件）",
+      "步骤 2：执行清洗流程（标准化 + 去重 + 合并）",
+      "步骤 3：验证清洗后数据格式正确",
+      "步骤 4：执行特征工程（数值 + 分类 + 衍生）",
+      "步骤 5：验证特征矩阵维度正确",
+      "步骤 6：划分训练/测试集",
+      "步骤 7：训练模型",
+      "步骤 8：在测试集上评估",
+      "步骤 9：验证模型能输出合理的价格预测",
+      "步骤 10：保存模型到文件",
+      "步骤 11：重新加载模型验证可用"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "爬虫 → 清洗数据流通测试",
+    "steps": [
+      "步骤 1：使用 mock HTML 运行 Carsensor 爬虫",
+      "步骤 2：将爬虫输出传入清洗模块",
+      "步骤 3：验证清洗模块能正确处理爬虫输出格式",
+      "步骤 4：验证清洗后的 DataFrame 包含预期列",
+      "步骤 5：验证清洗后数据类型正确",
+      "步骤 6：使用 mock HTML 运行 Mobilico 爬虫",
+      "步骤 7：将 Mobilico 输出也传入清洗模块",
+      "步骤 8：验证两源数据能正确合并",
+      "步骤 9：验证合并后的列名统一",
+      "步骤 10：验证合并后无重复"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "清洗 → 特征工程 → 模型训练流水线",
+    "steps": [
+      "步骤 1：准备清洗后的 DataFrame",
+      "步骤 2：调用特征构建入口获取 X, y",
+      "步骤 3：验证 X 列数 > 0 且无字符串列",
+      "步骤 4：划分数据集",
+      "步骤 5：训练线性回归模型",
+      "步骤 6：训练 XGBoost 模型",
+      "步骤 7：评估两个模型",
+      "步骤 8：验证评估指标均为有效数值",
+      "步骤 9：比较模型性能",
+      "步骤 10：选择最佳模型"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "模型训练 → 保存 → 加载 → 预测完整流程",
+    "steps": [
+      "步骤 1：准备训练数据",
+      "步骤 2：训练 RandomForest 模型",
+      "步骤 3：保存模型到 out/models/",
+      "步骤 4：加载保存的模型",
+      "步骤 5：使用加载的模型预测",
+      "步骤 6：验证预测结果与保存前一致",
+      "步骤 7：验证预测值在合理范围内",
+      "步骤 8：保存预测结果到数据库",
+      "步骤 9：从数据库查询预测结果",
+      "步骤 10：验证数据库中的结果与原始一致"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "数据存储 → 导出 → 重新导入一致性测试",
+    "steps": [
+      "步骤 1：创建测试数据 DataFrame",
+      "步骤 2：导出为 CSV",
+      "步骤 3：导出为 pickle",
+      "步骤 4：插入 SQLite 数据库",
+      "步骤 5：从 CSV 重新读取",
+      "步骤 6：从 pickle 重新读取",
+      "步骤 7：从数据库查询",
+      "步骤 8：验证三种来源的数据一致",
+      "步骤 9：验证数据类型保持不变",
+      "步骤 10：清理测试文件"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "多模型训练 → 评估 → 对比 → 最优选择完整流程",
+    "steps": [
+      "步骤 1：准备特征矩阵和目标变量",
+      "步骤 2：划分训练/验证/测试集",
+      "步骤 3：训练线性回归模型",
+      "步骤 4：训练随机森林模型",
+      "步骤 5：训练 XGBoost 模型",
+      "步骤 6：训练 LightGBM 模型",
+      "步骤 7：在验证集上评估所有模型",
+      "步骤 8：生成对比表格",
+      "步骤 9：选择 R² 最高的模型",
+      "步骤 10：在测试集上最终评估",
+      "步骤 11：保存最优模型",
+      "步骤 12：验证保存的模型可加载使用"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "超参数调优 → 重新训练 → 评估改进效果",
+    "steps": [
+      "步骤 1：准备训练数据",
+      "步骤 2：训练默认参数的 XGBoost 模型",
+      "步骤 3：记录默认模型的 RMSE",
+      "步骤 4：定义超参数搜索空间",
+      "步骤 5：执行 Grid Search 调优",
+      "步骤 6：获取最优参数",
+      "步骤 7：使用最优参数重新训练",
+      "步骤 8：评估调优后模型",
+      "步骤 9：验证调优后 RMSE <= 默认模型",
+      "步骤 10：保存调优后的模型和参数"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "Carsensor + Mobilico + AucSupport 三源数据合并清洗",
+    "steps": [
+      "步骤 1：分别准备三个来源的 mock 数据",
+      "步骤 2：保存为 pickle 文件",
+      "步骤 3：调用清洗入口加载三个文件",
+      "步骤 4：验证列名统一化",
+      "步骤 5：验证价格单位统一（日元）",
+      "步骤 6：验证里程单位统一（公里）",
+      "步骤 7：验证年份格式统一（西历整数）",
+      "步骤 8：执行跨源去重",
+      "步骤 9：验证去重后数据量合理",
+      "步骤 10：输出合并后的 DataFrame",
+      "步骤 11：验证输出包含 source 标记列"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "init.sh 能成功初始化完整开发环境",
+    "steps": [
+      "步骤 1：运行 init.sh",
+      "步骤 2：验证 Python 版本检查通过",
+      "步骤 3：验证 uv 已安装",
+      "步骤 4：验证依赖已同步",
+      "步骤 5：验证 out/raw, out/cleaned, out/models, out/reports 目录存在",
+      "步骤 6：验证 uv run pytest 可执行",
+      "步骤 7：验证 uv run ruff check 可执行"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "数据库写入 → 查询 → 更新 → 删除 CRUD 完整测试",
+    "steps": [
+      "步骤 1：创建 SQLite 内存数据库",
+      "步骤 2：创建表结构",
+      "步骤 3：插入测试车辆数据",
+      "步骤 4：查询验证插入成功",
+      "步骤 5：更新价格信息",
+      "步骤 6：查询验证更新成功",
+      "步骤 7：删除测试数据",
+      "步骤 8：查询验证删除成功",
+      "步骤 9：验证关联表的级联操作",
+      "步骤 10：关闭连接"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "pytest 全部测试能无错误运行",
+    "steps": [
+      "步骤 1：运行 uv run pytest tests/ -v",
+      "步骤 2：验证所有测试用例通过",
+      "步骤 3：验证无 warning（或只有已知的 deprecation warning）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "ruff lint 检查零警告",
+    "steps": [
+      "步骤 1：运行 uv run ruff check src/ tests/",
+      "步骤 2：验证输出无错误",
+      "步骤 3：验证退出码为 0"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "特征工程输出可直接用于所有模型训练",
+    "steps": [
+      "步骤 1：构建特征矩阵 X 和目标变量 y",
+      "步骤 2：验证 X 的所有列为数值类型",
+      "步骤 3：使用 X, y 训练 LinearRegression（无报错）",
+      "步骤 4：使用 X, y 训练 RandomForest（无报错）",
+      "步骤 5：使用 X, y 训练 XGBoost（无报错）",
+      "步骤 6：使用 X, y 训练 LightGBM（无报错）",
+      "步骤 7：验证所有模型都能产生预测",
+      "步骤 8：验证预测值形状与 y 一致",
+      "步骤 9：验证预测值无 NaN",
+      "步骤 10：验证预测值在合理范围内"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "爬虫模块能正确处理网络超时异常",
+    "steps": [
+      "步骤 1：mock requests.get 抛出 Timeout 异常",
+      "步骤 2：调用 Carsensor extract_car_info",
+      "步骤 3：验证返回 None 而非抛出异常",
+      "步骤 4：调用 Mobilico extract_car_info",
+      "步骤 5：验证返回 None",
+      "步骤 6：调用 AucSupport extract_car_info",
+      "步骤 7：验证返回空列表",
+      "步骤 8：验证日志中记录了异常信息",
+      "步骤 9：验证后续请求不受影响",
+      "步骤 10：验证超时后程序可继续运行"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "爬虫请求间隔遵守 3 秒礼仪",
+    "steps": [
+      "步骤 1：mock time.sleep",
+      "步骤 2：调用 scrape_carsensor page_count=3",
+      "步骤 3：验证 time.sleep(3) 被调用了 2 次",
+      "步骤 4：调用 scrape_mobilico page_count=3",
+      "步骤 5：验证 time.sleep(3) 被调用",
+      "步骤 6：调用 scrape_aucsupport iterations=3",
+      "步骤 7：验证 time.sleep(3) 被调用",
+      "步骤 8：验证请求间实际时间间隔 >= 3 秒",
+      "步骤 9：验证首次请求前无延迟",
+      "步骤 10：验证最后一次请求后无多余延迟"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Carsensor parse_cassette 完整字段提取验证",
+    "steps": [
+      "步骤 1：构建包含所有字段的完整 mock HTML cassette",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 title 字段不为空",
+      "步骤 4：验证 year 为 4 位整数",
+      "步骤 5：验证 mileage_km 为正浮点数",
+      "步骤 6：验证 inspection 格式为 YYYYMM",
+      "步骤 7：验证 accident_history 不为空",
+      "步骤 8：验证 total_price 为正浮点数",
+      "步骤 9：验证 base_price 为正浮点数",
+      "步骤 10：验证 region 包含都道府县",
+      "步骤 11：验证 displacement 不为空",
+      "步骤 12：验证 transmission 不为空"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "Mobilico parse_exhibited_article 完整字段提取验证",
+    "steps": [
+      "步骤 1：构建包含所有字段的完整 mock article HTML",
+      "步骤 2：调用 parse_exhibited_article",
+      "步骤 3：验证 title 字段不为空",
+      "步骤 4：验证 total_price 为正浮点数",
+      "步骤 5：验证 base_price 为正浮点数",
+      "步骤 6：验证 other_fee 被正确提取",
+      "步骤 7：验证 year 不为空",
+      "步骤 8：验证 mileage_km 为正浮点数",
+      "步骤 9：验证 inspection 格式正确",
+      "步骤 10：验证 region 不为空"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "AucSupport 完整数据行解析验证",
+    "steps": [
+      "步骤 1：准备完整的 mock 数据行对",
+      "步骤 2：调用 parse_cassette",
+      "步骤 3：验证 maker 字段正确",
+      "步骤 4：验证 title 字段正确",
+      "步骤 5：验证 grade 字段正确",
+      "步骤 6：验证 year 字段正确",
+      "步骤 7：验证 mileage_km 已转为公里",
+      "步骤 8：验证 cartype 字段正确",
+      "步骤 9：验证 valuation 字段正确",
+      "步骤 10：验证 price_low 和 price_high 正确",
+      "步骤 11：验证 color 字段正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "清洗模块完整标准化流程测试",
+    "steps": [
+      "步骤 1：准备包含所有需标准化字段的原始数据",
+      "步骤 2：调用价格标准化（万円→日元整数）",
+      "步骤 3：验证价格转换正确",
+      "步骤 4：调用里程标准化",
+      "步骤 5：验证里程转换正确",
+      "步骤 6：调用年份标准化",
+      "步骤 7：验证年份为西历整数",
+      "步骤 8：调用修复历史标准化",
+      "步骤 9：验证修复历史为布尔值",
+      "步骤 10：调用变速箱标准化",
+      "步骤 11：验证变速箱为 AT/MT/CVT"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "特征工程 builder 完整流程测试",
+    "steps": [
+      "步骤 1：准备清洗后的 DataFrame（含所有字段）",
+      "步骤 2：调用数值特征生成",
+      "步骤 3：验证车龄列已添加",
+      "步骤 4：调用分类特征编码",
+      "步骤 5：验证独热编码列已添加",
+      "步骤 6：调用衍生特征生成",
+      "步骤 7：验证衍生特征列已添加",
+      "步骤 8：调用缺失值处理",
+      "步骤 9：验证无缺失值",
+      "步骤 10：调用特征选择",
+      "步骤 11：验证输出 X 和 y 格式正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 evaluator 完整评估报告生成测试",
+    "steps": [
+      "步骤 1：准备 y_true 和 y_pred（4 个模型）",
+      "步骤 2：计算 RMSE",
+      "步骤 3：计算 MAE",
+      "步骤 4：计算 R²",
+      "步骤 5：计算 MAPE",
+      "步骤 6：生成多模型对比表格",
+      "步骤 7：验证表格包含所有指标",
+      "步骤 8：验证按 R² 排序",
+      "步骤 9：生成特征重要性排序",
+      "步骤 10：验证特征重要性总和约等于 1"
+    ],
+    "passes": false
+  },
+  {
+    "category": "functional",
+    "description": "模型 trainer 完整训练流程含日志测试",
+    "steps": [
+      "步骤 1：准备训练数据 X_train, y_train",
+      "步骤 2：配置日志捕获",
+      "步骤 3：训练线性回归模型",
+      "步骤 4：验证日志记录了训练开始",
+      "步骤 5：训练随机森林模型",
+      "步骤 6：验证日志记录了训练用时",
+      "步骤 7：执行 5 折交叉验证",
+      "步骤 8：验证日志记录了每折分数",
+      "步骤 9：验证日志记录了平均分数",
+      "步骤 10：验证所有模型均已拟合"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "清洗后全字段数据质量综合检查",
+    "steps": [
+      "步骤 1：加载清洗后的 DataFrame",
+      "步骤 2：验证 title 列非空率 >= 95%",
+      "步骤 3：验证 year 在 1990~当前年份范围",
+      "步骤 4：验证 mileage_km >= 0 且 < 500000",
+      "步骤 5：验证 total_price > 0 且 < 1 亿日元",
+      "步骤 6：验证 transmission 只含 AT/MT/CVT",
+      "步骤 7：验证 accident_history 为布尔型",
+      "步骤 8：验证 region 不为空",
+      "步骤 9：验证无完全重复行",
+      "步骤 10：验证 base_price <= total_price（若两者均不为空）"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "特征矩阵完整性与一致性检查",
+    "steps": [
+      "步骤 1：构建特征矩阵 X 和目标变量 y",
+      "步骤 2：验证 X 行数 == y 长度",
+      "步骤 3：验证 X 所有列为数值类型",
+      "步骤 4：验证 X 无 NaN",
+      "步骤 5：验证 X 无 Inf",
+      "步骤 6：验证 y 无 NaN",
+      "步骤 7：验证 y 所有值 > 0",
+      "步骤 8：验证独热编码列值只有 0 和 1",
+      "步骤 9：验证标签编码列值为非负整数",
+      "步骤 10：验证数值特征无极端异常值"
+    ],
+    "passes": false
+  },
+  {
+    "category": "data_quality",
+    "description": "多源数据合并后一致性检查",
+    "steps": [
+      "步骤 1：分别加载三个网站的原始数据",
+      "步骤 2：记录各源原始行数",
+      "步骤 3：执行合并清洗",
+      "步骤 4：验证合并后行数 <= 三源总和",
+      "步骤 5：验证合并后行数 >= 500",
+      "步骤 6：验证所有列名统一",
+      "步骤 7：验证价格单位统一（日元）",
+      "步骤 8：验证里程单位统一（公里整数）",
+      "步骤 9：验证年份格式统一（西历整数）",
+      "步骤 10：验证无跨源重复"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "Carsensor 爬虫完整多页抓取 → pickle 保存 → 重新加载验证",
+    "steps": [
+      "步骤 1：mock requests.get 返回 3 页数据",
+      "步骤 2：调用 scrape_carsensor page_count=4",
+      "步骤 3：验证每页间有 3 秒延迟",
+      "步骤 4：验证返回的车辆列表长度正确",
+      "步骤 5：验证每辆车都包含 title 字段",
+      "步骤 6：验证 pickle 文件已保存",
+      "步骤 7：重新加载 pickle",
+      "步骤 8：验证加载数据与原始一致",
+      "步骤 9：验证数据可转为 DataFrame",
+      "步骤 10：验证 DataFrame 列名符合预期"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "Mobilico 爬虫完整多页抓取 → pickle 保存 → 重新加载验证",
+    "steps": [
+      "步骤 1：mock requests.get 返回 3 页数据",
+      "步骤 2：调用 scrape_mobilico page_count=4",
+      "步骤 3：验证 URL 包含 ?page=1, ?page=2, ?page=3",
+      "步骤 4：验证请求间隔 >= 3 秒",
+      "步骤 5：验证返回车辆列表长度正确",
+      "步骤 6：验证每辆车包含 title 和 total_price",
+      "步骤 7：保存为 pickle",
+      "步骤 8：重新加载验证",
+      "步骤 9：转为 DataFrame",
+      "步骤 10：验证 DataFrame 格式正确"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "AucSupport 爬虫多次迭代抓取 → 数据完整性验证",
+    "steps": [
+      "步骤 1：mock get_soup 返回完整表格 HTML",
+      "步骤 2：调用 scrape_aucsupport iterations=3",
+      "步骤 3：验证每次迭代间有 3 秒延迟",
+      "步骤 4：验证总车辆数 = 单次数 × 3",
+      "步骤 5：验证每辆车包含 maker 和 title",
+      "步骤 6：验证 mileage_km 已正确转换",
+      "步骤 7：验证 price_low <= price_high",
+      "步骤 8：保存为 pickle",
+      "步骤 9：重新加载验证一致",
+      "步骤 10：转为 DataFrame 验证格式"
+    ],
+    "passes": false
+  },
+  {
+    "category": "integration",
+    "description": "存储模块多表关联操作完整测试",
+    "steps": [
+      "步骤 1：创建 SQLite 内存数据库",
+      "步骤 2：创建 cars, prices, predictions, scrape_logs 四张表",
+      "步骤 3：插入 10 条车辆记录到 cars 表",
+      "步骤 4：为每辆车插入价格记录到 prices 表",
+      "步骤 5：验证外键关联正确",
+      "步骤 6：插入预测记录到 predictions 表",
+      "步骤 7：插入爬虫日志到 scrape_logs 表",
+      "步骤 8：联表查询验证数据一致",
+      "步骤 9：验证级联删除正确",
+      "步骤 10：验证表结构符合 schema 定义"
+    ],
+    "passes": false
+  }
+]

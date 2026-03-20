@@ -1,0 +1,41 @@
+services:
+  metabase:
+    image: metabase/metabase:v0.49.0
+    ports:
+      - "3000:3000"
+    environment:
+      MB_DB_TYPE: postgres
+      MB_DB_DBNAME: metabase
+      MB_DB_PORT: 5432
+      MB_DB_USER: bi_tool
+      MB_DB_PASS: bi_tool_pw
+      MB_DB_HOST: postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: bi_tool
+      POSTGRES_PASSWORD: bi_tool_pw
+      POSTGRES_DB: metabase
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mysql:
+    image: mysql:8.0.30
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: sample
+      MYSQL_DATABASE: car_data
+      MYSQL_USER: car_user
+      MYSQL_PASSWORD: car_password
+    volumes:
+      - mysqldata:/var/lib/mysql
+
+volumes:
+  pgdata:
+  mysqldata:

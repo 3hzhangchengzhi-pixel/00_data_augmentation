@@ -1,0 +1,36 @@
+# Agent-generated output directories
+generations/
+
+# Log files
+logs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+.venv/
+
+# Output data
+out/raw/
+out/cleaned/
+out/models/
+out/reports/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+uv.lock
+
+# Jupyter
+.ipynb_checkpoints/
