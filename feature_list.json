@@ -268,7 +268,7 @@
       "步骤 2：调用 find_data_table",
       "步骤 3：验证返回包含预期表头的 table"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -278,7 +278,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 maker 字段正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -288,7 +288,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 title 字段正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -298,7 +298,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 grade 字段来自 row2"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -308,7 +308,7 @@
       "步骤 2：调用 parse_price_range",
       "步骤 3：验证返回 (12.0, 15.0)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -318,7 +318,7 @@
       "步骤 2：调用 parse_price_range",
       "步骤 3：验证返回 (10.0, 10.0)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -328,7 +328,7 @@
       "步骤 2：调用 parse_price_range",
       "步骤 3：验证返回 (None, None)"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -338,7 +338,7 @@
       "步骤 2：调用 clean_text",
       "步骤 3：验证返回单空格分隔的字符串"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -348,7 +348,7 @@
       "步骤 2：调用 get_soup",
       "步骤 3：验证 encoding 被设为 cp932"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -358,7 +358,7 @@
       "步骤 2：调用 extract_rows_from_table",
       "步骤 3：验证返回结果不包含空行"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -369,7 +369,7 @@
       "步骤 3：验证 col_positions 中已知列有正确索引",
       "步骤 4：验证缺失列映射为 None"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -379,7 +379,7 @@
       "步骤 2：调用 extract_car_info",
       "步骤 3：验证返回空列表而非异常"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -389,7 +389,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 mileage_km 等于 52000.0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -399,7 +399,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 color 字段来自 row2[4]"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",

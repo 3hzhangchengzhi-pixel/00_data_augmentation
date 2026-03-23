@@ -29,8 +29,16 @@ from data_augmentation.websites.mobilico import (
     scrape_mobilico,
 )
 from data_augmentation.websites.aucsupport import (
-    parse_price_range,
+    EXPECTED_HEADERS,
+    align_columns,
+    clean_text as aucsupport_clean_text,
+    extract_car_info as aucsupport_extract_car_info,
+    extract_rows_from_table,
     find_data_table,
+    get_soup,
+    parse_cassette as aucsupport_parse_cassette,
+    parse_price_range,
+    scrape_aucsupport,
 )
 
 
@@ -357,6 +365,307 @@ class TestAucsupportUtils:
         low, high = parse_price_range("")
         assert low is None
         assert high is None
+
+
+# ---------------------------------------------------------------------------
+# AucSupport clean_text Tests (#33)
+# ---------------------------------------------------------------------------
+class TestAucsupportCleanText:
+    """aucsupport.clean_text のテスト"""
+
+    def test_fullwidth_space_and_multiple_spaces(self):
+        """#33: 全角空格和连续空白処理"""
+        result = aucsupport_clean_text("トヨタ\u3000シエンタ   G")
+        assert result == "トヨタ シエンタ G"
+
+    def test_nbsp_removal(self):
+        """NBSP を半角スペースに変換"""
+        result = aucsupport_clean_text("hello\xa0world")
+        assert result == "hello world"
+
+    def test_none_returns_empty(self):
+        """None → 空文字列"""
+        result = aucsupport_clean_text(None)
+        assert result == ""
+
+    def test_strips_whitespace(self):
+        """前後空白トリム"""
+        result = aucsupport_clean_text("  hello  ")
+        assert result == "hello"
+
+
+# ---------------------------------------------------------------------------
+# AucSupport find_data_table Tests (#26)
+# ---------------------------------------------------------------------------
+class TestAucsupportFindDataTable:
+    """find_data_table のテスト"""
+
+    def test_finds_table_with_expected_headers(self):
+        """#26: 正确识别包含预期表头的数据表格"""
+        headers = " ".join(EXPECTED_HEADERS)
+        html = f"""
+        <html><body>
+            <table id="nav"><tr><td>ナビ</td></tr></table>
+            <table id="data">
+                <tr><th>{("</th><th>".join(EXPECTED_HEADERS))}</th></tr>
+                <tr><td>トヨタ</td><td>シエンタ</td></tr>
+            </table>
+        </body></html>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        result = find_data_table(soup)
+        assert result is not None
+        assert result.get("id") == "data"
+
+    def test_returns_none_when_no_matching_table(self):
+        """表头不匹配时返回 None"""
+        html = """
+        <html><body>
+            <table><tr><td>unrelated</td></tr></table>
+        </body></html>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        result = find_data_table(soup)
+        assert result is None
+
+
+# ---------------------------------------------------------------------------
+# AucSupport extract_rows_from_table Tests (#35)
+# ---------------------------------------------------------------------------
+class TestAucsupportExtractRows:
+    """extract_rows_from_table のテスト"""
+
+    def test_skips_empty_rows(self):
+        """#35: 空行をスキップ"""
+        html = """
+        <table>
+            <tr><td>トヨタ</td><td>シエンタ</td></tr>
+            <tr><td></td><td></td></tr>
+            <tr><td>ホンダ</td><td>フィット</td></tr>
+        </table>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        table = soup.find("table")
+        rows = extract_rows_from_table(table)
+        assert len(rows) == 2
+        assert rows[0][0] == "トヨタ"
+        assert rows[1][0] == "ホンダ"
+
+    def test_extracts_th_and_td(self):
+        """th と td 両方抽出"""
+        html = """
+        <table>
+            <tr><th>メーカー</th><th>車種</th></tr>
+            <tr><td>トヨタ</td><td>シエンタ</td></tr>
+        </table>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        table = soup.find("table")
+        rows = extract_rows_from_table(table)
+        assert len(rows) == 2
+        assert rows[0] == ["メーカー", "車種"]
+
+
+# ---------------------------------------------------------------------------
+# AucSupport align_columns Tests (#36)
+# ---------------------------------------------------------------------------
+class TestAucsupportAlignColumns:
+    """align_columns のテスト"""
+
+    def test_maps_column_positions(self):
+        """#36: 正确映射列位置"""
+        rows = [
+            ["メーカー", "車種", "年式", "シフト", "走行", "型式", "評価", "価格(万円)", "更新年月", "グレード", "排気量", "車検", "色", "装備"],
+            ["トヨタ", "シエンタ", "2020", "CVT", "3.5", "NHP170G", "4.5", "120 ～ 150", "2024/01", "G", "1500", "2025/11", "白", "ナビ"],
+        ]
+        (_, data_rows), col_positions = align_columns(rows)
+        assert col_positions["メーカー"] == 0
+        assert col_positions["車種"] == 1
+        assert col_positions["価格(万円)"] == 7
+        assert len(data_rows) == 1
+
+    def test_missing_columns_mapped_to_none(self):
+        """#36: 缺失列映射为 None"""
+        rows = [
+            ["メーカー", "車種", "年式"],
+            ["トヨタ", "シエンタ", "2020"],
+        ]
+        (_, data_rows), col_positions = align_columns(rows)
+        assert col_positions["メーカー"] == 0
+        assert col_positions["シフト"] is None
+        assert col_positions["走行"] is None
+
+
+# ---------------------------------------------------------------------------
+# AucSupport parse_cassette Tests (#27, #28, #29, #38, #39)
+# ---------------------------------------------------------------------------
+def _build_aucsupport_row_pair(
+    maker: str = "トヨタ",
+    title: str = "シエンタ",
+    grade: str = "G",
+    year: str = "2020",
+    shift: str = "CVT",
+    mileage: str = "5.2",
+    cartype: str = "NHP170G",
+    valuation: str = "4.5",
+    price: str = "120 ～ 150",
+    update_date: str = "2024/01",
+    displacement: str = "1500",
+    inspection: str = "2025/11",
+    color: str = "白",
+    equipment: str = "ナビ",
+) -> tuple[list[str], list[str]]:
+    """构建 AucSupport 的 2 行数据对"""
+    row1 = [maker, title, year, shift, mileage, cartype, valuation, price, update_date]
+    row2 = ["", grade, "", "", color, "", "", "", ""]
+    return row1, row2
+
+
+class TestAucsupportParseCassette:
+    """parse_cassette のテスト"""
+
+    def test_extract_maker(self):
+        """#27: 正确提取制造商字段"""
+        row1, row2 = _build_aucsupport_row_pair(maker="トヨタ")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["maker"] == "トヨタ"
+
+    def test_extract_title(self):
+        """#28: 正确提取车种名称"""
+        row1, row2 = _build_aucsupport_row_pair(title="シエンタ")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["title"] == "シエンタ"
+
+    def test_extract_grade(self):
+        """#29: 正确提取等级信息（来自 row2）"""
+        row1, row2 = _build_aucsupport_row_pair(grade="FUNBASE G")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["grade"] == "FUNBASE G"
+
+    def test_mileage_multiplied_by_10000(self):
+        """#38: 走行距离正确乘以 10000"""
+        row1, row2 = _build_aucsupport_row_pair(mileage="5.2")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["mileage_km"] == 52000.0
+
+    def test_extract_color(self):
+        """#39: 正确提取颜色字段（来自 row2[4]）"""
+        row1, row2 = _build_aucsupport_row_pair(color="パールホワイト")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["color"] == "パールホワイト"
+
+    def test_extract_price_range(self):
+        """价格范围正确解析"""
+        row1, row2 = _build_aucsupport_row_pair(price="120 ～ 150")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["price_low"] == 120.0
+        assert result["price_high"] == 150.0
+
+    def test_extract_year_and_cartype(self):
+        """年式と型式の抽出"""
+        row1, row2 = _build_aucsupport_row_pair(year="2020", cartype="NHP170G")
+        result = aucsupport_parse_cassette(row1, row2)
+        assert result["year"] == "2020"
+        assert result["cartype"] == "NHP170G"
+
+
+# ---------------------------------------------------------------------------
+# AucSupport get_soup Tests (#34)
+# ---------------------------------------------------------------------------
+class TestAucsupportGetSoup:
+    """get_soup のテスト"""
+
+    def test_detects_shift_jis_encoding(self):
+        """#34: Shift_JIS 编码检测"""
+        mock_resp = MagicMock()
+        mock_resp.headers = {"Content-Type": "text/html; charset=shift_jis"}
+        mock_resp.text = "<html><body>テスト</body></html>"
+        mock_resp.encoding = None
+        mock_resp.apparent_encoding = "utf-8"
+
+        with patch("data_augmentation.websites.aucsupport.requests.get", return_value=mock_resp):
+            soup = get_soup("https://example.com")
+
+        assert mock_resp.encoding == "cp932"
+        assert soup is not None
+
+    def test_detects_cp932_encoding(self):
+        """Content-Type に cp932 を含む場合"""
+        mock_resp = MagicMock()
+        mock_resp.headers = {"Content-Type": "text/html; charset=cp932"}
+        mock_resp.text = "<html><body>テスト</body></html>"
+        mock_resp.encoding = None
+
+        with patch("data_augmentation.websites.aucsupport.requests.get", return_value=mock_resp):
+            soup = get_soup("https://example.com")
+
+        assert mock_resp.encoding == "cp932"
+
+    def test_falls_back_to_apparent_encoding(self):
+        """encoding が iso-8859-1 の場合 apparent_encoding にフォールバック"""
+        mock_resp = MagicMock()
+        mock_resp.headers = {"Content-Type": "text/html"}
+        mock_resp.text = "<html><body>テスト</body></html>"
+        mock_resp.encoding = "iso-8859-1"
+        mock_resp.apparent_encoding = "utf-8"
+
+        with patch("data_augmentation.websites.aucsupport.requests.get", return_value=mock_resp):
+            soup = get_soup("https://example.com")
+
+        assert mock_resp.encoding == "utf-8"
+
+
+# ---------------------------------------------------------------------------
+# AucSupport extract_car_info Tests (#37)
+# ---------------------------------------------------------------------------
+class TestAucsupportExtractCarInfo:
+    """extract_car_info のテスト"""
+
+    def test_runtime_error_returns_empty_list(self):
+        """#37: 表格未找到时返回空列表"""
+        with patch(
+            "data_augmentation.websites.aucsupport.get_data_rows",
+            side_effect=RuntimeError("no table"),
+        ):
+            result = aucsupport_extract_car_info("https://example.com")
+        assert result == []
+
+    def test_request_exception_returns_empty_list(self):
+        """网络异常返回空列表"""
+        with patch(
+            "data_augmentation.websites.aucsupport.get_data_rows",
+            side_effect=requests_lib.RequestException("timeout"),
+        ):
+            result = aucsupport_extract_car_info("https://example.com")
+        assert result == []
+
+
+# ---------------------------------------------------------------------------
+# AucSupport scrape_aucsupport Tests
+# ---------------------------------------------------------------------------
+class TestAucsupportPagination:
+    """scrape_aucsupport テスト"""
+
+    def test_iterations_and_pickle_save(self):
+        """複数回イテレーションと pickle 保存"""
+        car_data = [{"maker": "トヨタ", "title": "シエンタ"}]
+        with patch(
+            "data_augmentation.websites.aucsupport.extract_car_info",
+            return_value=car_data,
+        ):
+            with patch("data_augmentation.websites.aucsupport.time.sleep"):
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    out_path = Path(tmpdir) / "aucsupport_test.pkl"
+                    result = scrape_aucsupport(
+                        url="https://example.com",
+                        iterations=3,
+                        output_path=out_path,
+                    )
+                    assert len(result) == 3  # 3 iterations × 1 car
+                    assert out_path.exists()
+                    with open(out_path, "rb") as f:
+                        loaded = pickle.load(f)
+                    assert loaded == result
 
 
 # ---------------------------------------------------------------------------

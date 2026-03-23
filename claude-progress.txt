@@ -39,7 +39,28 @@
   - 完成集成测试项（爬虫多页抓取 → pickle 保存 → 加载验证）
   - 之后进入 cleaning 模块实现（normalize, dedup, cleaner）
 
-当前完成状态: 27/135 项测试已通过
+已完成任务（续）:
+-----------
+
+[✅] AucSupport 爬虫模块测试 — 14 项测试全部通过
+
+完成的测试项:
+  #26: AucSupport 爬虫能正确识别数据表格
+  #27: AucSupport 爬虫能正确提取制造商字段
+  #28: AucSupport 爬虫能正确提取车种名称
+  #29: AucSupport 爬虫能正确提取等级信息
+  #30: AucSupport 爬虫能正确解析价格范围
+  #31: AucSupport parse_price_range 处理单一价格
+  #32: AucSupport parse_price_range 处理空字符串
+  #33: AucSupport clean_text 处理全角空格和连续空白
+  #34: AucSupport get_soup 能正确检测 Shift_JIS 编码
+  #35: AucSupport extract_rows_from_table 能跳过空行
+  #36: AucSupport align_columns 能正确映射列位置
+  #37: AucSupport extract_car_info 对表格未找到时返回空列表
+  #38: AucSupport 走行距离正确乘以 10000
+  #39: AucSupport 爬虫能提取颜色字段
+
+当前完成状态: 41/135 项测试已通过
 
 ---
 
