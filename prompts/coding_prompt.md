@@ -145,6 +145,14 @@ uv run pytest tests/ -v --tb=short
 
 ### 第八步：提交进度
 
+**重要：所有开发必须在 `feat/initial-setup` 分支上进行，不要直接推送到 `main`。**
+
+开始工作前，先切换到正确的分支：
+
+```bash
+git checkout feat/initial-setup || git checkout -b feat/initial-setup
+```
+
 编写具有描述性的 Git 提交信息：
 
 ```bash
