@@ -1,6 +1,53 @@
 ========================================
-初始化智能体 — 会话进度记录
+二手車データ Pipeline — 会话进度记录
 ========================================
+
+## 会话 4 — 2026-03-22
+
+已完成任务:
+-----------
+
+[✅] Models 模块实现与测试 — 20 项 pytest 测试全部通过
+
+完成的测试项:
+  #66: 模型 trainer 能训练线性回归基线模型
+  #67: 模型 trainer 能训练随机森林模型
+  #68: 模型 trainer 能训练 XGBoost 模型
+  #69: 模型 trainer 能训练 LightGBM 模型
+  #70: 模型 trainer 能正确划分训练/验证/测试集 (70/15/15)
+  #71: 模型 trainer 能执行 5 折交叉验证
+  #72: 模型 evaluator 能计算 RMSE
+  #73: 模型 evaluator 能计算 MAE
+  #74: 模型 evaluator 能计算 R²
+  #75: 模型 evaluator 能计算 MAPE
+  #76: 模型 evaluator 能生成多模型对比表格
+  #77: 模型 predictor 能加载已保存的模型文件
+  #78: 模型 predictor 输入车辆参数后能输出预测价格
+  #79: 模型 predictor 能输出预测置信区间
+  #80: 模型 tuner 能执行 Grid Search 调优
+  #81: 模型 tuner 能执行 Random Search 调优
+
+实现内容:
+  - trainer.py: split_data, train_linear_regression, train_random_forest, train_xgboost, train_lightgbm, cross_validate_model
+  - evaluator.py: calc_rmse, calc_mae, calc_r2, calc_mape, generate_comparison_table
+  - predictor.py: load_model, predict, predict_with_confidence（RF 用分位点区間、その他は正規近似）
+  - tuner.py: grid_search, random_search
+
+发现的问题:
+  - pyproject.toml 的 ruff 配置需要 ignore N803/N806（ML 代码中 X, X_train 等大写变量是标准惯例）
+  - feat/initial-setup 分支上 feature_list.json 中 #0-#65 未标记为 true（与 claude-progress.txt 记录不一致，前几次会话可能在不同分支工作）
+
+下一步工作建议:
+  - 实现 storage 模块（schema, database, export）— #82-#90，约 9 项测试
+  - 实现 data_quality 测试项 — #91-#105
+  - 实现 integration 测试项 — #106-#120
+  - 补充之前未实际标记的 #0-#65 项测试（cleaning, features, scraper 模块的完整测试）
+
+当前完成状态: 16/135 项测试已通过（feat/initial-setup 分支）
+pytest 总计: 38 项全部通过
+
+---
+
 日期: 2026-03-19
 
 已完成任务:
