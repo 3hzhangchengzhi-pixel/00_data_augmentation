@@ -678,7 +678,7 @@
       "步骤 2：调用训练函数指定 LinearRegression",
       "步骤 3：验证返回已拟合的模型对象"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -688,7 +688,7 @@
       "步骤 2：调用训练函数指定 RandomForestRegressor",
       "步骤 3：验证返回已拟合的模型对象"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -698,7 +698,7 @@
       "步骤 2：调用训练函数指定 XGBRegressor",
       "步骤 3：验证返回已拟合的模型对象"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -708,7 +708,7 @@
       "步骤 2：调用训练函数指定 LGBMRegressor",
       "步骤 3：验证返回已拟合的模型对象"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -721,7 +721,7 @@
       "步骤 5：验证测试集约 150 条",
       "步骤 6：验证三个集合无交集"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -732,7 +732,7 @@
       "步骤 3：验证返回 5 个分数",
       "步骤 4：验证所有分数在合理范围内"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -742,7 +742,7 @@
       "步骤 2：调用 RMSE 计算函数",
       "步骤 3：验证结果为非负数且计算正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -752,7 +752,7 @@
       "步骤 2：调用 MAE 计算函数",
       "步骤 3：验证结果正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -762,7 +762,7 @@
       "步骤 2：调用 R² 计算函数",
       "步骤 3：验证完美预测时 R² = 1.0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -772,7 +772,7 @@
       "步骤 2：调用 MAPE 计算函数",
       "步骤 3：验证结果为百分比格式"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -783,7 +783,7 @@
       "步骤 3：验证返回包含 RMSE/MAE/R²/MAPE 的表格",
       "步骤 4：验证表格行数等于模型数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -793,7 +793,7 @@
       "步骤 2：调用模型加载函数",
       "步骤 3：验证加载的模型能正常预测"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -803,7 +803,7 @@
       "步骤 2：输入一组车辆参数",
       "步骤 3：验证输出为正数价格"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -813,7 +813,7 @@
       "步骤 2：输入车辆参数请求置信区间",
       "步骤 3：验证返回 (lower, upper) 且 lower < upper"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -824,7 +824,7 @@
       "步骤 3：验证返回最优参数组合",
       "步骤 4：验证最优分数优于默认参数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -834,7 +834,7 @@
       "步骤 2：调用 Random Search 函数",
       "步骤 3：验证返回最优参数组合"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
