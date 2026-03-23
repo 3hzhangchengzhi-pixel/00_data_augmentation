@@ -512,7 +512,7 @@
       "步骤 2：调用车龄计算函数",
       "步骤 3：验证 car_age = 当前年份 - 2020"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -522,7 +522,7 @@
       "步骤 2：调用里程分桶函数",
       "步骤 3：验证 0-3万 → '0-30k', 3-6万 → '30k-60k' 等"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -532,7 +532,7 @@
       "步骤 2：调用排气量分桶函数",
       "步骤 3：验证分桶结果正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -542,7 +542,7 @@
       "步骤 2：调用对数变换函数",
       "步骤 3：验证输出为 log(price) 且无 NaN"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -553,7 +553,7 @@
       "步骤 3：验证生成 region_东京都, region_大阪府 等列",
       "步骤 4：验证值为 0 或 1"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -563,7 +563,7 @@
       "步骤 2：调用独热编码函数",
       "步骤 3：验证生成正确的独热列"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -573,7 +573,7 @@
       "步骤 2：调用标签编码函数",
       "步骤 3：验证输出为整数编码"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -583,7 +583,7 @@
       "步骤 2：调用标签编码函数",
       "步骤 3：验证输出为整数编码且映射一致"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -593,7 +593,7 @@
       "步骤 2：调用衍生特征函数",
       "步骤 3：验证 price_per_km = price / mileage"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -603,7 +603,7 @@
       "步骤 2：调用衍生特征函数",
       "步骤 3：验证 annual_mileage = mileage / car_age"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -613,7 +613,7 @@
       "步骤 2：调用折旧率计算函数",
       "步骤 3：验证折旧率在合理范围内"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -624,7 +624,7 @@
       "步骤 3：验证剩余月数为非负整数",
       "步骤 4：验证已过期的车检返回 0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -634,7 +634,7 @@
       "步骤 2：调用是否有车检判断函数",
       "步骤 3：验证有效车检返回 True, 过期返回 False"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -645,7 +645,7 @@
       "步骤 3：验证输出无 NaN",
       "步骤 4：验证填充策略合理（中位数/众数等）"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -656,7 +656,7 @@
       "步骤 3：验证冗余特征被移除",
       "步骤 4：验证保留的特征间相关性 < 阈值"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -668,7 +668,7 @@
       "步骤 4：验证 y 为一维数组",
       "步骤 5：验证 X 和 y 行数一致"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",

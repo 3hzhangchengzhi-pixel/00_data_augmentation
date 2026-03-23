@@ -84,7 +84,15 @@
   - 实现 models 模块（trainer, evaluator, predictor, tuner）
   - 实现 storage 模块（database, export, schema）
 
-当前完成状态: 51/135 项测试已通过
+[✅] Features 模块实现与测试 — 16 项测试全部通过
+
+完成的测试项:
+  #50-#53: numerical（车龄、里程分桶、排气量分桶、价格对数变换）
+  #54-#57: categorical（地域/变速箱独热编码、颜色/厂商标签编码）
+  #58-#62: derived（单位里程价格、年均里程、折旧率、车检剩余月数、车检有无）
+  #63-#65: builder（缺失值处理、高相关除去、X/y 输出）
+
+当前完成状态: 67/135 项测试已通过
 
 ---
 
