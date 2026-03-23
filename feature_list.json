@@ -409,7 +409,7 @@
       "步骤 2：调用价格标准化函数",
       "步骤 3：验证输出为 1890000（整数日元）"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -419,7 +419,7 @@
       "步骤 2：调用里程标准化函数",
       "步骤 3：验证输出为 52000（整数）"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -429,7 +429,7 @@
       "步骤 2：调用年份标准化函数",
       "步骤 3：验证输出为 2020"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -439,7 +439,7 @@
       "步骤 2：调用车检日期标准化函数",
       "步骤 3：验证输出为 '2026-11' 或等效日期对象"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -449,7 +449,7 @@
       "步骤 2：调用修复历史标准化函数",
       "步骤 3：验证分别返回 True 和 False"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -459,7 +459,7 @@
       "步骤 2：调用变速箱标准化函数",
       "步骤 3：验证分别返回 'AT', 'MT', 'CVT'"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -470,7 +470,7 @@
       "步骤 3：验证重复记录被移除",
       "步骤 4：验证保留信息最完整的记录"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -481,7 +481,7 @@
       "步骤 3：验证同一辆车只保留一条",
       "步骤 4：验证保留的是信息最完整的记录"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -492,7 +492,7 @@
       "步骤 3：验证返回统一格式的 DataFrame",
       "步骤 4：验证总行数等于各源去重后之和"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -502,7 +502,7 @@
       "步骤 2：调用地域标准化函数",
       "步骤 3：验证输出统一格式"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",

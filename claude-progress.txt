@@ -60,7 +60,31 @@
   #38: AucSupport 走行距离正确乘以 10000
   #39: AucSupport 爬虫能提取颜色字段
 
-当前完成状态: 41/135 项测试已通过
+[✅] Cleaning 模块实现与测试 — 10 项测试全部通过
+
+完成的测试项:
+  #40: normalize 能将「万円」价格转为整数日元
+  #41: normalize 能将里程统一为公里整数
+  #42: normalize 能将和历年份转为西历
+  #43: normalize 能解析车检日期为标准格式
+  #44: normalize 能将修复历史转为布尔值
+  #45: normalize 能统一变速箱分类
+  #46: dedup 能基于标题+价格+里程去重
+  #47: dedup 能跨数据源去重
+  #48: cleaner 能加载并合并多源 pickle 数据
+  #49: normalize 能标准化地域名称
+
+实现内容:
+  - 完善 normalize.py：和暦→西暦、車検日期標準化、地域名標準化
+  - 实现 dedup.py：dedup_by_key（保留最完整记录）、cross_source_dedup
+  - 实现 cleaner.py：load_and_merge、clean_dataframe、run_cleaning_pipeline
+
+下一步工作建议:
+  - 实现 features 模块（numerical, categorical, derived, builder）
+  - 实现 models 模块（trainer, evaluator, predictor, tuner）
+  - 实现 storage 模块（database, export, schema）
+
+当前完成状态: 51/135 项测试已通过
 
 ---
 
