@@ -29,7 +29,7 @@ echo "✅ uv $(uv --version) 検出"
 
 # 3. 依存パッケージのインストール
 echo "📦 依存パッケージをインストール中..."
-uv sync
+uv sync --extra dev
 
 # 4. 出力ディレクトリの作成
 echo "📁 出力ディレクトリを作成中..."

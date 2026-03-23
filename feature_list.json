@@ -7,7 +7,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证返回的 title 字段不为空且与预期一致"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -17,7 +17,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 year 为 4 位整数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -27,7 +27,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 mileage_km 等于 52000.0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -37,7 +37,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 inspection 等于 '202611'"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -47,7 +47,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 accident_history 字段值正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -57,7 +57,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 total_price 为正浮点数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -67,7 +67,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 base_price 为正浮点数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -77,7 +77,7 @@
       "步骤 2：调用 parse_cassette 函数",
       "步骤 3：验证 region 字段包含都道府县名"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -87,7 +87,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 displacement 不为空"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -97,7 +97,7 @@
       "步骤 2：调用 parse_cassette",
       "步骤 3：验证 transmission 不为空"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -107,7 +107,7 @@
       "步骤 2：调用 clean_text",
       "步骤 3：验证返回字符串无 NBSP 且首尾无空白"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -117,7 +117,7 @@
       "步骤 2：调用 clean_price",
       "步骤 3：验证返回 189.0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -127,7 +127,7 @@
       "步骤 2：调用 clean_price",
       "步骤 3：验证返回 None"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -137,7 +137,7 @@
       "步骤 2：调用 extract_car_info",
       "步骤 3：验证返回 None"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -148,7 +148,7 @@
       "步骤 3：验证第 2 页 URL 格式正确",
       "步骤 4：验证第 1 页使用原始 URL"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -1338,7 +1338,7 @@
       "步骤 11：验证 displacement 不为空",
       "步骤 12：验证 transmission 不为空"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
