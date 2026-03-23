@@ -176,13 +176,30 @@ git commit -m "实现 [功能名称] - 已完成测试验证
 - 下一步应该开展的工作（给下一个会话的建议）
 - 当前的完成状态（例如："45/200 项测试已通过"）
 
-### 第十步：干净地结束会话
+### 第十步：合并到 main 分支
+
+**重要：每次会话结束前，必须将 `feat/initial-setup` 分支的改动合并回 `main`。**
+
+```bash
+git checkout main
+git merge feat/initial-setup --no-ff -m "Merge feat/initial-setup: [本次完成的功能概述]"
+```
+
+如果出现合并冲突，手动解决后提交：
+```bash
+# 解决冲突后
+git add .
+git commit -m "Merge feat/initial-setup: [功能概述]（解决合并冲突）"
+```
+
+### 第十一步：干净地结束会话
 
 在上下文（记忆）填满之前：
 
 - 提交所有正在编写的代码（确保所有工作已保存到 Git）
 - 更新 claude-progress.txt（记录本次会话的成果）
 - 如果测试已验证，更新 feature_list.json（同步任务完成状态）
+- **将 feat/initial-setup 合并到 main 分支**（确保 main 包含最新进度）
 - 确保没有未提交的更改（保持 Git 工作区干净）
 - 确保所有 pytest 测试可通过（不留下损坏的代码）
 
