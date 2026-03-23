@@ -158,7 +158,7 @@
       "步骤 2：调用 parse_exhibited_article",
       "步骤 3：验证 title 字段正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -168,7 +168,7 @@
       "步骤 2：调用 pick_from_price_block",
       "步骤 3：验证 total_price 为正浮点数"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -178,7 +178,7 @@
       "步骤 2：调用 pick_from_price_block",
       "步骤 3：验证 base_price 正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -188,7 +188,7 @@
       "步骤 2：调用 pick_from_price_block",
       "步骤 3：验证 other_fee 正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -198,7 +198,7 @@
       "步骤 2：调用 pick_from_spec_block",
       "步骤 3：验证 year 字段正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -208,7 +208,7 @@
       "步骤 2：调用 pick_from_spec_block",
       "步骤 3：验证 mileage_km 等于 35000.0"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -218,7 +218,7 @@
       "步骤 2：调用 pick_from_spec_block",
       "步骤 3：验证 inspection 等于 '202608'"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -228,7 +228,7 @@
       "步骤 2：调用 pick_from_spec_block",
       "步骤 3：验证 region 字段正确"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -238,7 +238,7 @@
       "步骤 2：调用 extract_money_li",
       "步骤 3：验证返回 '68.0 万円' 格式"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -248,7 +248,7 @@
       "步骤 2：调用 parse_exhibited_article",
       "步骤 3：验证抛出 ValueError"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",
@@ -258,7 +258,7 @@
       "步骤 2：调用 scrape_mobilico page_count=3",
       "步骤 3：验证调用 URL 包含 ?page=1, ?page=2"
     ],
-    "passes": false
+    "passes": true
   },
   {
     "category": "functional",

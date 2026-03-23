@@ -2,6 +2,47 @@
 二手車データ Pipeline — 会话进度记录
 ========================================
 
+## 会话 3 — 2026-03-22
+
+已完成任务:
+-----------
+
+[✅] Mobilico 爬虫模块测试 — 11 项测试全部通过
+
+完成的测试项:
+  #15: Mobilico 爬虫能正确提取车辆标题
+  #16: Mobilico 爬虫能正确提取支払総額
+  #17: Mobilico 爬虫能正确提取本体价格
+  #18: Mobilico 爬虫能正确提取诸费用
+  #19: Mobilico 爬虫能正确提取年式
+  #20: Mobilico 爬虫能正确提取走行距离并转换单位
+  #21: Mobilico 爬虫能正确解析车检日期
+  #22: Mobilico 爬虫能正确提取出品地域
+  #23: Mobilico extract_money_li 能正确组合价格文字
+  #24: Mobilico parse_exhibited_article 对非 article 标签抛出 ValueError
+  #25: Mobilico 分页抓取能正确拼接 ?page=N 参数
+
+实现内容:
+  - 在 test_scraper.py 中编写了 _build_mobilico_article_html 等 3 个辅助函数构建 mock HTML
+  - TestMobilicoParseExhibitedArticle: 4 项 parse_exhibited_article 测试（标题、空 header、非 article 异常、完整字段）
+  - TestMobilicoPickFromPriceBlock: 4 项价格提取测试（总额、本体、诸费用、空块）
+  - TestMobilicoPickFromSpecBlock: 9 项规格提取测试（年式、里程转换、车检、地域、板金歴、纳期等）
+  - TestMobilicoExtractMoneyLi: 3 项价格文字组合测试
+  - TestMobilicoExtractCarInfo: 3 项 HTTP/网络异常测试
+  - TestMobilicoPagination: 3 项分页和 pickle 保存测试
+
+发现的问题:
+  - 无。Mobilico 爬虫代码结构良好，所有字段提取逻辑正确。
+
+下一步工作建议:
+  - 完成 AucSupport 爬虫测试（#26-#32 附近）
+  - 完成集成测试项（爬虫多页抓取 → pickle 保存 → 加载验证）
+  - 之后进入 cleaning 模块实现（normalize, dedup, cleaner）
+
+当前完成状态: 27/135 项测试已通过
+
+---
+
 ## 会话 2 — 2026-03-22
 
 已完成任务:

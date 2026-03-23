@@ -6,6 +6,7 @@ import tempfile
 from pathlib import Path
 
 import pytest
+import requests as requests_lib
 from bs4 import BeautifulSoup
 
 from data_augmentation.websites.carsensor import (
@@ -17,8 +18,15 @@ from data_augmentation.websites.carsensor import (
     scrape_carsensor,
 )
 from data_augmentation.websites.mobilico import (
+    clean_text as mobilico_clean_text,
+    clean_price as mobilico_clean_price,
     extract_money_li,
+    norm_text as mobilico_norm_text,
+    parse_exhibited_article,
     pick_from_price_block,
+    pick_from_spec_block,
+    extract_car_info as mobilico_extract_car_info,
+    scrape_mobilico,
 )
 from data_augmentation.websites.aucsupport import (
     parse_price_range,
@@ -349,3 +357,403 @@ class TestAucsupportUtils:
         low, high = parse_price_range("")
         assert low is None
         assert high is None
+
+
+# ---------------------------------------------------------------------------
+# Mobilico Helper — mock HTML builder
+# ---------------------------------------------------------------------------
+def _build_mobilico_article_html(
+    title: str = "トヨタ シエンタ FUNBASE G",
+    total_price: str = "68.0",
+    base_price: str = "55.0",
+    other_fee: str = "13.0",
+    specs: dict | None = None,
+) -> BeautifulSoup:
+    """構建 Mobilico 単一出品記事の mock HTML (article タグ)"""
+    if specs is None:
+        specs = {
+            "年式": "2019年",
+            "走行距離": "3.5万km",
+            "車検": "26年8月",
+            "板金歴": "なし",
+            "出品地域": "東京都",
+            "予定納期": "2週間以内",
+        }
+
+    price_items = ""
+    for label, val in [
+        ("支払総額", total_price),
+        ("本体価格", base_price),
+        ("諸費用", other_fee),
+    ]:
+        price_items += f"""
+        <li class="meta-item">
+            <span class="label">{label}</span>
+            <strong>{val}</strong>
+            <small>万円</small>
+        </li>
+        """
+
+    spec_items = ""
+    for label, val in specs.items():
+        spec_items += f"""
+        <li class="meta-item">
+            <span class="label">{label}</span>
+            <span class="text-sm">{val}</span>
+        </li>
+        """
+
+    html = f"""
+    <article class="exhibited-car card">
+        <header><h3 class="card-title">{title}</h3></header>
+        <div class="card-body">
+            <div class="meta-items">
+                <ul>
+                    {price_items}
+                </ul>
+            </div>
+            <div class="meta-items">
+                <ul>
+                    {spec_items}
+                </ul>
+            </div>
+        </div>
+    </article>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.find("article")
+
+
+def _build_mobilico_price_ul(
+    total: str = "68.0",
+    base: str = "55.0",
+    fee: str = "13.0",
+) -> BeautifulSoup:
+    """構建 Mobilico 価格 UL ブロック"""
+    html = f"""
+    <ul>
+        <li class="meta-item">
+            <span class="label">支払総額</span>
+            <strong>{total}</strong><small>万円</small>
+        </li>
+        <li class="meta-item">
+            <span class="label">本体価格</span>
+            <strong>{base}</strong><small>万円</small>
+        </li>
+        <li class="meta-item">
+            <span class="label">諸費用</span>
+            <strong>{fee}</strong><small>万円</small>
+        </li>
+    </ul>
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.find("ul")
+
+
+def _build_mobilico_spec_ul(specs: dict | None = None) -> BeautifulSoup:
+    """構建 Mobilico スペック UL ブロック"""
+    if specs is None:
+        specs = {
+            "年式": "2019年",
+            "走行距離": "3.5万km",
+            "車検": "26年8月",
+            "板金歴": "なし",
+            "出品地域": "東京都",
+            "予定納期": "2週間以内",
+        }
+    items = ""
+    for label, val in specs.items():
+        items += f"""
+        <li class="meta-item">
+            <span class="label">{label}</span>
+            <span class="text-sm">{val}</span>
+        </li>
+        """
+    html = f"<ul>{items}</ul>"
+    soup = BeautifulSoup(html, "html.parser")
+    return soup.find("ul")
+
+
+# ---------------------------------------------------------------------------
+# Mobilico parse_exhibited_article Tests (#15)
+# ---------------------------------------------------------------------------
+class TestMobilicoParseExhibitedArticle:
+    """parse_exhibited_article 各字段提取テスト"""
+
+    def test_extract_title(self):
+        """#15: 正确提取车辆标题"""
+        article = _build_mobilico_article_html(title="トヨタ シエンタ FUNBASE G")
+        result = parse_exhibited_article(article)
+        assert result["title"] == "トヨタ シエンタ FUNBASE G"
+        assert result["title"] is not None
+        assert len(result["title"]) > 0
+
+    def test_extract_title_empty_header(self):
+        """header が空の場合 title は None"""
+        html = """
+        <article class="exhibited-car card">
+            <header></header>
+            <div class="card-body"></div>
+        </article>
+        """
+        soup = BeautifulSoup(html, "html.parser")
+        article = soup.find("article")
+        result = parse_exhibited_article(article)
+        assert result["title"] is None
+
+    def test_non_article_raises_value_error(self):
+        """#24: 非 article 标签抛出 ValueError"""
+        html = "<div class='test'>test</div>"
+        soup = BeautifulSoup(html, "html.parser")
+        div_tag = soup.find("div")
+        with pytest.raises(ValueError, match="article"):
+            parse_exhibited_article(div_tag)
+
+    def test_full_field_extraction(self):
+        """完整字段提取验证"""
+        article = _build_mobilico_article_html()
+        result = parse_exhibited_article(article)
+        assert result["title"] == "トヨタ シエンタ FUNBASE G"
+        assert result["total_price"] == 68.0
+        assert result["base_price"] == 55.0
+        assert result["other_fee"] == 13.0
+        assert result["year"] == "2019年"
+        assert result["mileage_km"] == 35000.0
+        assert result["inspection"] == "202608"
+        assert result["bodywork_history"] == "なし"
+        assert result["region"] == "東京都"
+
+
+# ---------------------------------------------------------------------------
+# Mobilico pick_from_price_block Tests (#16, #17, #18)
+# ---------------------------------------------------------------------------
+class TestMobilicoPickFromPriceBlock:
+    """pick_from_price_block のテスト"""
+
+    def test_extract_total_price(self):
+        """#16: 正确提取支払総額"""
+        ul = _build_mobilico_price_ul(total="68.0")
+        result = pick_from_price_block(ul)
+        assert result["total_price"] == 68.0
+        assert result["total_price"] > 0
+
+    def test_extract_base_price(self):
+        """#17: 正确提取本体价格"""
+        ul = _build_mobilico_price_ul(base="55.0")
+        result = pick_from_price_block(ul)
+        assert result["base_price"] == 55.0
+        assert result["base_price"] > 0
+
+    def test_extract_other_fee(self):
+        """#18: 正确提取诸费用"""
+        ul = _build_mobilico_price_ul(fee="13.0")
+        result = pick_from_price_block(ul)
+        assert result["other_fee"] == 13.0
+        assert result["other_fee"] > 0
+
+    def test_empty_block(self):
+        """空の価格ブロック"""
+        html = "<ul></ul>"
+        soup = BeautifulSoup(html, "html.parser")
+        ul = soup.find("ul")
+        result = pick_from_price_block(ul)
+        assert result["total_price"] is None
+        assert result["base_price"] is None
+        assert result["other_fee"] is None
+
+
+# ---------------------------------------------------------------------------
+# Mobilico pick_from_spec_block Tests (#19, #20, #21, #22)
+# ---------------------------------------------------------------------------
+class TestMobilicoPickFromSpecBlock:
+    """pick_from_spec_block のテスト"""
+
+    def test_extract_year(self):
+        """#19: 正确提取年式"""
+        ul = _build_mobilico_spec_ul(specs={"年式": "2019年"})
+        result = pick_from_spec_block(ul)
+        assert result["year"] == "2019年"
+
+    def test_extract_mileage_with_man_km(self):
+        """#20: 正确提取走行距离并转换「万km」单位"""
+        ul = _build_mobilico_spec_ul(specs={"走行距離": "3.5万km"})
+        result = pick_from_spec_block(ul)
+        assert result["mileage_km"] == 35000.0
+
+    def test_extract_mileage_without_man(self):
+        """走行距離が万km単位でない場合"""
+        ul = _build_mobilico_spec_ul(specs={"走行距離": "8000km"})
+        result = pick_from_spec_block(ul)
+        assert result["mileage_km"] == 8000.0
+
+    def test_extract_inspection_date(self):
+        """#21: 正确解析车检日期「26年8月」→ '202608'"""
+        ul = _build_mobilico_spec_ul(specs={"車検": "26年8月"})
+        result = pick_from_spec_block(ul)
+        assert result["inspection"] == "202608"
+
+    def test_extract_inspection_single_digit_month(self):
+        """車検: 1桁月のゼロパディング"""
+        ul = _build_mobilico_spec_ul(specs={"車検": "27年3月"})
+        result = pick_from_spec_block(ul)
+        assert result["inspection"] == "202703"
+
+    def test_extract_inspection_no_match(self):
+        """車検: パースできない値は None"""
+        ul = _build_mobilico_spec_ul(specs={"車検": "なし"})
+        result = pick_from_spec_block(ul)
+        assert result["inspection"] is None
+
+    def test_extract_region(self):
+        """#22: 正确提取出品地域"""
+        ul = _build_mobilico_spec_ul(specs={"出品地域": "大阪府"})
+        result = pick_from_spec_block(ul)
+        assert result["region"] == "大阪府"
+
+    def test_extract_bodywork_history(self):
+        """板金歴の抽出"""
+        ul = _build_mobilico_spec_ul(specs={"板金歴": "あり"})
+        result = pick_from_spec_block(ul)
+        assert result["bodywork_history"] == "あり"
+
+    def test_extract_estimated_delivery(self):
+        """予定納期の抽出"""
+        ul = _build_mobilico_spec_ul(specs={"予定納期": "2週間以内"})
+        result = pick_from_spec_block(ul)
+        assert result["estimated_delivery"] == "2週間以内"
+
+
+# ---------------------------------------------------------------------------
+# Mobilico extract_money_li Tests (#23)
+# ---------------------------------------------------------------------------
+class TestMobilicoExtractMoneyLi:
+    """extract_money_li のテスト"""
+
+    def test_combines_strong_and_small(self):
+        """#23: <strong> と <small> を結合して '68.0 万円' 形式"""
+        html = '<li class="meta-item"><strong>68.0</strong><small>万円</small></li>'
+        soup = BeautifulSoup(html, "html.parser")
+        li = soup.find("li")
+        result = extract_money_li(li)
+        assert result == "68.0 万円"
+
+    def test_no_strong_falls_back_to_norm_text(self):
+        """<strong> がない場合は norm_text にフォールバック"""
+        html = '<li class="meta-item">応談</li>'
+        soup = BeautifulSoup(html, "html.parser")
+        li = soup.find("li")
+        result = extract_money_li(li)
+        assert result == "応談"
+
+    def test_strong_only_no_small(self):
+        """<small> がない場合でも <strong> の数字を返す"""
+        html = '<li class="meta-item"><strong>100</strong></li>'
+        soup = BeautifulSoup(html, "html.parser")
+        li = soup.find("li")
+        result = extract_money_li(li)
+        assert "100" in result
+
+
+# ---------------------------------------------------------------------------
+# Mobilico extract_car_info Tests
+# ---------------------------------------------------------------------------
+class TestMobilicoExtractCarInfo:
+    """extract_car_info のテスト"""
+
+    def test_http_error_returns_none(self):
+        """HTTP 错误返回 None"""
+        mock_resp = MagicMock()
+        mock_resp.status_code = 404
+        with patch("data_augmentation.websites.mobilico.requests.get", return_value=mock_resp):
+            result = mobilico_extract_car_info("https://mobilico.jp/test")
+        assert result is None
+
+    def test_request_exception_returns_none(self):
+        """网络异常返回 None"""
+        with patch(
+            "data_augmentation.websites.mobilico.requests.get",
+            side_effect=requests_lib.RequestException("timeout"),
+        ):
+            result = mobilico_extract_car_info("https://mobilico.jp/test")
+        assert result is None
+
+    def test_success_returns_list(self):
+        """正常返回车辆列表"""
+        article = _build_mobilico_article_html(title="テスト車両")
+        full_html = f"<html><body>{article}</body></html>"
+        mock_resp = MagicMock()
+        mock_resp.status_code = 200
+        mock_resp.content = full_html.encode("utf-8")
+        with patch("data_augmentation.websites.mobilico.requests.get", return_value=mock_resp):
+            result = mobilico_extract_car_info("https://mobilico.jp/test")
+        assert isinstance(result, list)
+        assert len(result) >= 1
+        assert result[0]["title"] == "テスト車両"
+
+
+# ---------------------------------------------------------------------------
+# Mobilico scrape_mobilico Tests (#25)
+# ---------------------------------------------------------------------------
+class TestMobilicoPagination:
+    """scrape_mobilico 分页テスト"""
+
+    def test_page_url_construction(self):
+        """#25: 分页抓取正确拼接 ?page=N 参数"""
+        urls_called = []
+
+        def mock_extract(url):
+            urls_called.append(url)
+            return [{"title": f"car_{len(urls_called)}"}]
+
+        with patch("data_augmentation.websites.mobilico.extract_car_info", side_effect=mock_extract):
+            with patch("data_augmentation.websites.mobilico.time.sleep"):
+                result = scrape_mobilico(
+                    base_url="https://mobilico.jp/exhibited_cars/TOYOTA/SIENTA",
+                    page_count=4,
+                )
+
+        assert "?page=1" in urls_called[0]
+        assert "?page=2" in urls_called[1]
+        assert "?page=3" in urls_called[2]
+        assert len(urls_called) == 3
+        assert len(result) == 3
+
+    def test_stops_on_none(self):
+        """提取失败时停止爬取"""
+        call_count = 0
+
+        def mock_extract(url):
+            nonlocal call_count
+            call_count += 1
+            if call_count == 2:
+                return None
+            return [{"title": "car"}]
+
+        with patch("data_augmentation.websites.mobilico.extract_car_info", side_effect=mock_extract):
+            with patch("data_augmentation.websites.mobilico.time.sleep"):
+                result = scrape_mobilico(
+                    base_url="https://mobilico.jp/test",
+                    page_count=5,
+                )
+
+        assert call_count == 2
+        assert len(result) == 1
+
+    def test_saves_pickle(self):
+        """结果可保存为 pickle"""
+        with patch(
+            "data_augmentation.websites.mobilico.extract_car_info",
+            return_value=[{"title": "test_car", "year": "2020年"}],
+        ):
+            with patch("data_augmentation.websites.mobilico.time.sleep"):
+                with tempfile.TemporaryDirectory() as tmpdir:
+                    out_path = Path(tmpdir) / "sub" / "mobilico_test.pkl"
+                    result = scrape_mobilico(
+                        base_url="https://mobilico.jp/test",
+                        page_count=2,
+                        output_path=out_path,
+                    )
+                    assert out_path.exists()
+                    with open(out_path, "rb") as f:
+                        loaded = pickle.load(f)
+                    assert loaded == result
