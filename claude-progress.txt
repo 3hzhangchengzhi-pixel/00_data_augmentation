@@ -92,7 +92,14 @@
   #58-#62: derived（单位里程价格、年均里程、折旧率、车检剩余月数、车检有无）
   #63-#65: builder（缺失值处理、高相关除去、X/y 输出）
 
+下一步工作建议:
+  - 实现 models 模块（trainer, evaluator, predictor, tuner）— 约 16 项测试
+  - 实现 storage 模块（database, export, schema）— 约 10 项测试
+  - 完成集成测试项（端到端 Pipeline 验证）
+  - 完成数据质量测试项
+
 当前完成状态: 67/135 项测试已通过
+pytest 总计: 151 项全部通过（含辅助/边界测试）
 
 ---
 
